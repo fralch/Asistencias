@@ -28,3 +28,9 @@ Route.get('/usuarios', 'UsuariosController.getUsuarios')
 Route.post('/usuarios', 'UsuariosController.setUsuarios')
 Route.put('/usuarios', 'UsuariosController.updateUsuarios')
 Route.delete('/usuarios', 'UsuariosController.deleteUsuarios')
+
+Route.get('/horariosLaborales', 'HorariosLaboralesController.getHorariosLaborales')
+Route.post('/horariosLaborales', 'HorariosLaboralesController.setHorariosLaborales')
+Route.put('/horariosLaborales', 'HorariosLaboralesController.updateHorariosLaborales')
+Route.delete('/horariosLaborales', 'HorariosLaboralesController.deleteHorariosLaborales')
+

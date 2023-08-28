@@ -19,7 +19,7 @@ test.group('Obtener usuarios', () => {
   })
   test('Actualizar usuario', async ({client}) => {
       const response = await client.put('/usuarios').json({
-          "id": 2,
+          "id": 9,
           "nombre": "Alex", 
           "apellido": "Cairampoma"        
       })
@@ -27,7 +27,7 @@ test.group('Obtener usuarios', () => {
   })
   test('Eliminar usuario', async ({client}) => {
       const response = await client.delete('/usuarios').json({
-          "id": 2
+          "id": 15
       })
       response.assertStatus(200)
   })
