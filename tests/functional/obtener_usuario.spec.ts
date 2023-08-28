@@ -25,4 +25,10 @@ test.group('Obtener usuarios', () => {
       })
       response.assertStatus(200)
   })
+  test('Eliminar usuario', async ({client}) => {
+      const response = await client.delete('/usuarios').json({
+          "id": 2
+      })
+      response.assertStatus(200)
+  })
 })

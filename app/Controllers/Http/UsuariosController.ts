@@ -25,4 +25,11 @@ export default class UsuariosController {
     await usuario.save()
     return response.status(200).json({ message: 'Usuario actualizado' })
   }
+
+  public async deleteUsuarios({request, response}: HttpContextContract) {
+    const { id } = request.all()
+    const usuario = await Usuario.findOrFail(id)
+    await usuario.delete()
+    return response.status(200).json({ message: 'Usuario eliminado' })
+  }
 }
