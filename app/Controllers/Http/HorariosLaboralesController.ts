@@ -9,6 +9,10 @@ export default class HorariosLaboralesController {
 
     public async setHorariosLaborales({request, response}: HttpContextContract) {
         const { id, hora_entrada, hora_salida, usuario_id } = request.all()
+
+        const horarioLaboral = await HorariosLaborale.findBy('usuario_id', usuario_id)
+        if (horarioLaboral) return response.status(400).json({ message: 'Ya existe un horario laboral para este usuario' })
+        
         HorariosLaborale.create({ id, hora_entrada, hora_salida, usuario_id })
         return response.status(200).json({ message: 'Horario laboral creado' })
     }
