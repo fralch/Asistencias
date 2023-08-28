@@ -26,3 +26,4 @@ Route.get('/', async () => {
 
  Route.get('/usuarios', 'UsuariosController.getUsuarios')
  Route.post('/usuarios', 'UsuariosController.setUsuarios')
+Route.put('/usuarios', 'UsuariosController.updateUsuarios')
