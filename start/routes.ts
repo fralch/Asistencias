@@ -34,3 +34,10 @@ Route.post('/horariosLaborales', 'HorariosLaboralesController.setHorariosLaboral
 Route.put('/horariosLaborales', 'HorariosLaboralesController.updateHorariosLaborales')
 Route.delete('/horariosLaborales', 'HorariosLaboralesController.deleteHorariosLaborales')
 
+
+Route.get('/permisos_vacaciones', 'PermisosVacacionesController.getPermisosVacaciones')
+Route.post('/permisos_vacaciones', 'PermisosVacacionesController.setPermisosVacaciones')
+Route.put('/permisos_vacaciones', 'PermisosVacacionesController.updatePermisosVacaciones')
+Route.delete('/permisos_vacaciones', 'PermisosVacacionesController.deletePermisosVacaciones')
+
+

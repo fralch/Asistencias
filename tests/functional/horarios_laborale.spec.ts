@@ -25,7 +25,7 @@ test.group('Horarios laborales', () => {
   })
   test('Eliminar horario laboral', async ({client}) => {
       const response = await client.delete('/horariosLaborales').json({
-          "id": 4
+          "id": 15
       })
       response.assertStatus(200)
   })
