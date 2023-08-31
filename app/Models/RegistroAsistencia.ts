@@ -6,13 +6,13 @@ export default class RegistroAsistencia extends BaseModel {
   public id: number
 
   @column()
-  public fecha : Date
+  public fecha : string
 
   @column()
-  public hora_entrada : DateTime
+  public hora_entrada : string
 
   @column()
-  public hora_salida : DateTime
+  public hora_salida : string
 
   @column()
   public foto : string

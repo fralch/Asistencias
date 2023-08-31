@@ -46,4 +46,6 @@ Route.put('/feriados_domingos', 'FeriadosDomingosController.updateFeriadosDoming
 Route.delete('/feriados_domingos', 'FeriadosDomingosController.deleteFeriadosDomingos')
 
 
+Route.post('/registro_asistencias', 'RegistroAsistenciasController.setRegistroAsistencias')
+
 
