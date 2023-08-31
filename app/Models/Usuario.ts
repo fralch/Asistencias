@@ -22,6 +22,9 @@ export default class Usuario extends BaseModel {
 
   @column()
   public area: string
+  
+  @column()
+  public coord: string
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime

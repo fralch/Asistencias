@@ -40,4 +40,10 @@ Route.post('/permisos_vacaciones', 'PermisosVacacionesController.setPermisosVaca
 Route.put('/permisos_vacaciones', 'PermisosVacacionesController.updatePermisosVacaciones')
 Route.delete('/permisos_vacaciones', 'PermisosVacacionesController.deletePermisosVacaciones')
 
+Route.get('/feriados_domingos',  'FeriadosDomingosController.getFeriadosDomingos')
+Route.post('/feriados_domingos', 'FeriadosDomingosController.setFeriadosDomingos')
+Route.put('/feriados_domingos', 'FeriadosDomingosController.updateFeriadosDomingos')
+Route.delete('/feriados_domingos', 'FeriadosDomingosController.deleteFeriadosDomingos')
+
+
 
