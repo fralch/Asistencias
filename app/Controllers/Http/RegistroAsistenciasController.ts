@@ -10,8 +10,8 @@ export default class RegistroAsistenciasController {
         const {  foto, dni } = request.all()
 
         // obteniendo usuario de dni 
-        const usuario_id = await Usuario.query().where('dni', dni).first()
-        console.log(usuario_id)
+        const usuario_id = await Usuario.findBy('dni', dni)
+        
         if (!usuario_id) {
             return response.status(400).send({ error: 'Usuario no encontrado' })
         }
@@ -74,7 +74,7 @@ export default class RegistroAsistenciasController {
                 registroAsistencia.fecha = fecha
                 registroAsistencia.hora_entrada = hora
                 registroAsistencia.foto = foto
-                registroAsistencia.usuario_id = 1
+                registroAsistencia.usuario_id = usuario_id.id
 
                 await registroAsistencia.save()
                 return response.status(200).send({ message: 'Asistencia registrada' })
