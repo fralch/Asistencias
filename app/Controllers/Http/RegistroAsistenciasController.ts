@@ -1,12 +1,23 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import RegistroAsistencia from 'App/Models/RegistroAsistencia'
+import Usuario from 'App/Models/Usuario'
 
 export default class RegistroAsistenciasController {
     public async getRegistroAsistencias({ }: HttpContextContract) {
         return { hello: 'world' }
     }
     public async setRegistroAsistencias({ request, response }: HttpContextContract) {
-        // const { fecha, hora_entrada, hora_salida, foto, horas_trabajadas, usuario_id } = request.all()
+        const {  foto, dni } = request.all()
+
+        // obteniendo usuario de dni 
+        const usuario_id = await Usuario.query().where('dni', dni).first()
+        console.log(usuario_id)
+        if (!usuario_id) {
+            return response.status(400).send({ error: 'Usuario no encontrado' })
+        }
+
+
+
         const now = new Date()
         const options = { timeZone: 'America/Lima' }
         const fecha = now.toLocaleString("es-PE", options).split(' ')[0]
@@ -62,7 +73,9 @@ export default class RegistroAsistenciasController {
                 const registroAsistencia = new RegistroAsistencia()
                 registroAsistencia.fecha = fecha
                 registroAsistencia.hora_entrada = hora
+                registroAsistencia.foto = foto
                 registroAsistencia.usuario_id = 1
+
                 await registroAsistencia.save()
                 return response.status(200).send({ message: 'Asistencia registrada' })
             }

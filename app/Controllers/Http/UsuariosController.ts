@@ -9,6 +9,10 @@ export default class UsuariosController {
 
   public async setUsuarios({request, response}: HttpContextContract) {
     const { dni, nombre, apellido, celular, cargo, area } = request.all()
+    const validar_usuario = await Usuario.findBy('dni', dni)
+    if (validar_usuario) {
+      return response.status(400).json({ message: 'Usuario ya existe' })
+    }
     Usuario.create({ dni, nombre, apellido, celular, cargo, area })
     return response.status(200).json({ message: 'Usuario creado' })
   }
