@@ -68,28 +68,47 @@ export default class RegistroAsistenciasController {
         if (turno === 'desconocido') {
             return response.status(400).send({ error: 'Fuera de turno' })
         }else if (turno === 'mañana') {
-            return 'mañana'; 
-            // const registroAsistencia = await RegistroAsistencia.query().where('fecha', fecha).where('usuario_id', 1).first()
-            // if (registroAsistencia) {
-            //     return response.status(400).send({ error: 'Ya se registró la asistencia' })
-            // } else {
-            //     const registroAsistencia = new RegistroAsistencia()
-            //     registroAsistencia.fecha = fecha
-            //     registroAsistencia.hora_entrada = hora
-            //     registroAsistencia.foto = foto
-            //     registroAsistencia.usuario_id = usuario_id.id
+            const usuario = await Usuario.findBy('dni', dni);
+            if (usuario !== null) {
+                const { id } = usuario;
+                const registroAsistencia = await RegistroAsistencia.query().where('fecha', fecha_formateada).where('usuario_id', id).first()
+                if (registroAsistencia) {
+                    return response.status(400).send({ error: 'Ya se registró la asistencia' })
+                }else {
+                    const registroAsistencia = new RegistroAsistencia()
+                    registroAsistencia.fecha = fecha_formateada
+                    registroAsistencia.hora_entrada = hora
+                    registroAsistencia.foto = foto
+                    registroAsistencia.usuario_id = usuario_id.id
 
-            //     await registroAsistencia.save()
-            //     return response.status(200).send({ message: 'Asistencia registrada' })
-            // }
+                    await registroAsistencia.save()
+                    return response.status(200).send({ message: 'Asistencia registrada' })
+                }
+            }
+            
         } else if (turno === 'tarde') {
             // return 'tarde'; 
             const usuario = await Usuario.findBy('dni', dni);
             if (usuario !== null) {
                 const { id } = usuario;
                 const registroAsistencia = await RegistroAsistencia.query().where('fecha', fecha_formateada).where('usuario_id', id).first()
-                return registroAsistencia;
+                if (registroAsistencia) {
+                    return response.status(400).send({ error: 'Ya se registró la asistencia' })
+                }else {
+                    const registroAsistencia = new RegistroAsistencia()
+                    registroAsistencia.fecha = fecha_formateada
+                    registroAsistencia.hora_entrada = hora
+                    registroAsistencia.foto = foto
+                    registroAsistencia.usuario_id = usuario_id.id
+
+                    await registroAsistencia.save()
+                    return response.status(200).send({ message: 'Asistencia registrada' })
+                }
+
             }
+
+            
+
 
             
             
