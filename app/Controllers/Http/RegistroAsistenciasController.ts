@@ -1,6 +1,7 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import RegistroAsistencia from 'App/Models/RegistroAsistencia'
 import Usuario from 'App/Models/Usuario'
+import Database from '@ioc:Adonis/Lucid/Database'
 
 export default class RegistroAsistenciasController {
     public async getRegistroAsistencias({ }: HttpContextContract) {
@@ -21,6 +22,7 @@ export default class RegistroAsistenciasController {
         const now = new Date()
         const options = { timeZone: 'America/Lima' }
         const fecha = now.toLocaleString("es-PE", options).split(' ')[0]
+        const fecha_formateada = fecha.split('/')[2] + '-' + fecha.split('/')[1] + '-' + fecha.split('/')[0]
         const hora = now.toLocaleString("es-PE", options).split(' ')[1]
         const hora_entrada_m = "08:00"
         const hora_salida_m = "13:00"
@@ -85,7 +87,7 @@ export default class RegistroAsistenciasController {
             const usuario = await Usuario.findBy('dni', dni);
             if (usuario !== null) {
                 const { id } = usuario;
-                const registroAsistencia = await RegistroAsistencia.query().where('fecha', fecha).where('usuario_id', id).first()
+                const registroAsistencia = await RegistroAsistencia.query().where('fecha', fecha_formateada).where('usuario_id', id).first()
                 return registroAsistencia;
             }
 
