@@ -47,8 +47,20 @@ export default class RegistroAsistenciasController {
             const horaSalidaNum = parseInt(horaSalidaTurno, 10); // Ejemplo: '13' -> 13
             const minutosSalidaNum = parseInt(minutosSalida, 10); // Ejemplo: '00' -> 0
 
-            if ( horaActualNum > horaEntradaNum || (horaActualNum === horaEntradaNum && minutosActualNum >= minutosEntradaNum)) {
-                if ( horaActualNum < horaSalidaNum || (horaActualNum === horaSalidaNum && minutosActualNum <= minutosSalidaNum)) {
+           // comprobar si la hora actual está entre la hora de entrada y la hora de salida
+            if (horaActualNum >= horaEntradaNum && horaActualNum <= horaSalidaNum) {
+                // comprobar si la hora actual es igual a la hora de entrada
+                if (horaActualNum === horaEntradaNum) {
+                    // comprobar si los minutos actuales son iguales o mayores a los minutos de entrada
+                    if (minutosActualNum >= minutosEntradaNum) {
+                        return true;
+                    }
+                } else if (horaActualNum === horaSalidaNum) {
+                    // comprobar si los minutos actuales son iguales o menores a los minutos de salida
+                    if (minutosActualNum <= minutosSalidaNum) {
+                        return true;
+                    }
+                } else {
                     return true;
                 }
             }
