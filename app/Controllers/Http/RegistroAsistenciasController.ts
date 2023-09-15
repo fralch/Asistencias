@@ -29,53 +29,35 @@ export default class RegistroAsistenciasController {
         const hora_entrada_t = "14:00"
         const hora_salida_t = "18:00"
 
-        function estaEnTurno(hora, horaEntrada, horaSalida) {
+        function estaEnTurno(hora) {
             // Dividir la hora actual en hora y minutos
             const [horaActual, minutosActual] = hora.split(':'); // Ejemplo: '09:30' -> horaActual: '09', minutosActual: '30'
 
             // Dividir la hora de entrada en hora y minutos
-            const [horaEntradaTurno, minutosEntrada] = horaEntrada.split(':'); // Ejemplo: '08:00' -> horaEntradaTurno: '08', minutosEntrada: '00'
+            const [horaEntradaTurnoMañana, minutosEntradaMañana] = hora_entrada_m.split(':'); // Ejemplo: '08:00' -> horaEntradaTurno: '08', minutosEntrada: '00'
 
             // Dividir la hora de salida en hora y minutos
-            const [horaSalidaTurno, minutosSalida] = horaSalida.split(':'); // Ejemplo: '13:00' -> horaSalidaTurno: '13', minutosSalida: '00'
+            const [horaSalidaTurnoMañana, minutosSalidaMañana] = hora_salida_m.split(':'); // Ejemplo: '13:00' -> horaSalidaTurno: '13', minutosSalida: '00'
 
-            // Convertir las partes de hora y minutos a valores numéricos
-            const horaActualNum = parseInt(horaActual, 10); // Ejemplo: '09' -> 9
-            const minutosActualNum = parseInt(minutosActual, 10); // Ejemplo: '30' -> 30
-            const horaEntradaNum = parseInt(horaEntradaTurno, 10); // Ejemplo: '08' -> 8
-            const minutosEntradaNum = parseInt(minutosEntrada, 10); // Ejemplo: '00' -> 0
-            const horaSalidaNum = parseInt(horaSalidaTurno, 10); // Ejemplo: '13' -> 13
-            const minutosSalidaNum = parseInt(minutosSalida, 10); // Ejemplo: '00' -> 0
+            // Dividir la hora de entrada en hora y minutos
+            const [horaEntradaTurnoTarde, minutosEntradaTarde] = hora_entrada_t.split(':'); // Ejemplo: '14:00' -> horaEntradaTurno: '14', minutosEntrada: '00'
 
-           // comprobar si la hora actual está entre la hora de entrada y la hora de salida
-            if (horaActualNum >= horaEntradaNum && horaActualNum <= horaSalidaNum) {
-                // comprobar si la hora actual es igual a la hora de entrada
-                if (horaActualNum === horaEntradaNum) {
-                    // comprobar si los minutos actuales son iguales o mayores a los minutos de entrada
-                    if (minutosActualNum >= minutosEntradaNum) {
-                        return true;
-                    }
-                } else if (horaActualNum === horaSalidaNum) {
-                    // comprobar si los minutos actuales son iguales o menores a los minutos de salida
-                    if (minutosActualNum <= minutosSalidaNum) {
-                        return true;
-                    }
-                } else {
-                    return true;
-                }
+            // Dividir la hora de salida en hora y minutos
+            const [horaSalidaTurnoTarde, minutosSalidaTarde] = hora_salida_t.split(':'); // Ejemplo: '18:00' -> horaSalidaTurno: '18', minutosSalida: '00'
+
+            // trabajar aqui para saber en que turno esta 
+            if (horaActual >= horaEntradaTurnoMañana && horaActual <= horaSalidaTurnoMañana) {
+                return 'mañana';
+            }else if (horaActual >= horaEntradaTurnoTarde && horaActual <= horaSalidaTurnoTarde) {
+                return 'tarde'; 
+            }else {
+                return 'desconocido';
             }
 
-            return false;
+            
         }
 
-        let turno = '';
-        if (estaEnTurno(hora, hora_entrada_m, hora_salida_m)) {
-            turno = 'mañana';
-        } else if (estaEnTurno(hora, hora_entrada_t, hora_salida_t)) {
-            turno = 'tarde';
-        } else {
-            turno = 'desconocido';
-        }
+        let turno = estaEnTurno(hora)
 
         if (turno === 'desconocido') {
             return response.status(400).send({ error: 'Fuera de turno' })
@@ -84,6 +66,7 @@ export default class RegistroAsistenciasController {
             if (usuario !== null) {
                 const { id } = usuario;
                 const registroAsistencia = await RegistroAsistencia.query().where('fecha', fecha_formateada).where('usuario_id', id).first()
+                console.log(registroAsistencia?.hora_entrada && registroAsistencia?.hora_salida === null)
                 if (registroAsistencia) {
                     return response.status(400).send({ error: 'Ya se registró la asistencia' })
                 }else {
@@ -116,17 +99,8 @@ export default class RegistroAsistenciasController {
                     await registroAsistencia.save()
                     return response.status(200).send({ message: 'Asistencia registrada' })
                 }
-
-            }
-
-            
-
-
-            
-            
+            }        
         }
-
-
     }
 
 }
