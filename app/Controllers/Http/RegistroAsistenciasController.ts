@@ -31,19 +31,19 @@ export default class RegistroAsistenciasController {
 
         function estaEnTurno(hora) {
             // Dividir la hora actual en hora y minutos
-            const [horaActual, minutosActual] = hora.split(':'); // Ejemplo: '09:30' -> horaActual: '09', minutosActual: '30'
+            const [horaActual] = hora.split(':'); // Ejemplo: '09:30' -> horaActual: '09', minutosActual: '30'
 
             // Dividir la hora de entrada en hora y minutos
-            const [horaEntradaTurnoMañana, minutosEntradaMañana] = hora_entrada_m.split(':'); // Ejemplo: '08:00' -> horaEntradaTurno: '08', minutosEntrada: '00'
+            const [horaEntradaTurnoMañana] = hora_entrada_m.split(':'); // Ejemplo: '08:00' -> horaEntradaTurno: '08', minutosEntrada: '00'
 
             // Dividir la hora de salida en hora y minutos
-            const [horaSalidaTurnoMañana, minutosSalidaMañana] = hora_salida_m.split(':'); // Ejemplo: '13:00' -> horaSalidaTurno: '13', minutosSalida: '00'
+            const [horaSalidaTurnoMañana] = hora_salida_m.split(':'); // Ejemplo: '13:00' -> horaSalidaTurno: '13', minutosSalida: '00'
 
             // Dividir la hora de entrada en hora y minutos
-            const [horaEntradaTurnoTarde, minutosEntradaTarde] = hora_entrada_t.split(':'); // Ejemplo: '14:00' -> horaEntradaTurno: '14', minutosEntrada: '00'
+            const [horaEntradaTurnoTarde] = hora_entrada_t.split(':'); // Ejemplo: '14:00' -> horaEntradaTurno: '14', minutosEntrada: '00'
 
             // Dividir la hora de salida en hora y minutos
-            const [horaSalidaTurnoTarde, minutosSalidaTarde] = hora_salida_t.split(':'); // Ejemplo: '18:00' -> horaSalidaTurno: '18', minutosSalida: '00'
+            const [horaSalidaTurnoTarde] = hora_salida_t.split(':'); // Ejemplo: '18:00' -> horaSalidaTurno: '18', minutosSalida: '00'
 
             // trabajar aqui para saber en que turno esta 
             if (horaActual >= horaEntradaTurnoMañana && horaActual <= horaSalidaTurnoMañana) {
@@ -52,9 +52,7 @@ export default class RegistroAsistenciasController {
                 return 'tarde'; 
             }else {
                 return 'desconocido';
-            }
-
-            
+            }            
         }
 
         let turno = estaEnTurno(hora)
@@ -62,6 +60,11 @@ export default class RegistroAsistenciasController {
         if (turno === 'desconocido') {
             return response.status(400).send({ error: 'Fuera de turno' })
         }else if (turno === 'mañana') {
+            //obtener minutos 
+            const minutos = hora.split(':')[1]
+            if (parseInt(minutos) > 15) {
+                return response.status(400).send({ error: 'Fuera de hora' })
+            }
             const usuario = await Usuario.findBy('dni', dni);
             if (usuario !== null) {
                 const { id } = usuario;
@@ -102,5 +105,7 @@ export default class RegistroAsistenciasController {
             }        
         }
     }
+
+    
 
 }
