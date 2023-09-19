@@ -1,7 +1,6 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import RegistroAsistencia from 'App/Models/RegistroAsistencia'
 import Usuario from 'App/Models/Usuario'
-import Database from '@ioc:Adonis/Lucid/Database'
 
 export default class RegistroAsistenciasController {
     public async getRegistroAsistencias({ }: HttpContextContract) {
@@ -60,11 +59,12 @@ export default class RegistroAsistenciasController {
         if (turno === 'desconocido') {
             return response.status(400).send({ error: 'Fuera de turno' })
         }else if (turno === 'mañana') {
-            //obtener minutos 
+            // minutos de tolerancia 
             const minutos = hora.split(':')[1]
             if (parseInt(minutos) > 15) {
                 return response.status(400).send({ error: 'Fuera de hora' })
             }
+
             const usuario = await Usuario.findBy('dni', dni);
             if (usuario !== null) {
                 const { id } = usuario;
@@ -85,7 +85,12 @@ export default class RegistroAsistenciasController {
             }
             
         } else if (turno === 'tarde') {
-            // return 'tarde'; 
+            // minutos de tolerancia 
+            const minutos = hora.split(':')[1]
+            if (parseInt(minutos) > 15) {
+                return response.status(400).send({ error: 'Fuera de hora' })
+            }
+
             const usuario = await Usuario.findBy('dni', dni);
             if (usuario !== null) {
                 const { id } = usuario;
