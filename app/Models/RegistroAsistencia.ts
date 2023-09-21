@@ -18,6 +18,9 @@ export default class RegistroAsistencia extends BaseModel {
   public foto : string
 
   @column()
+  public turno : string
+
+  @column()
   public horas_trabajadas : number
 
   @column()

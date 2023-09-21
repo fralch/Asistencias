@@ -53,12 +53,13 @@ export default class RegistarTardanzasFaltasController {
 
         const usuarios = await Usuario.all()
         const faltas = await Falta.all()
-
+        
        if(turno === 'mañana'){
         for (let i = 0; i < usuarios.length; i++) {
             const usuario = usuarios[i];
-            let falta = faltas.find((falta) => falta.usuario_id === usuario.id && falta.fecha === fecha_formateada && falta.turno === 'mañana')
-            if (!falta) {
+            console.log(usuario.id)
+            let asistio = await RegistroAsistencia.query().where('usuario_id', usuario.id).where('fecha', fecha_formateada).where('turno', 'mañana').first()
+            if (!asistio) {
                 await Falta.create({
                     usuario_id: usuario.id,
                     fecha: fecha_formateada,

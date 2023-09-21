@@ -10,6 +10,7 @@ export default class extends BaseSchema {
       table.time("hora_entrada")
       table.time("hora_salida")
       table.string("foto", 255)  
+      table.string("turno", 255)
       table.integer("horas_trabajadas")
       table.integer("usuario_id").unsigned().references("id").inTable("usuarios").onDelete("CASCADE")
       

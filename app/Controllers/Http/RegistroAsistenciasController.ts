@@ -77,6 +77,7 @@ export default class RegistroAsistenciasController {
                     registroAsistencia.fecha = fecha_formateada
                     registroAsistencia.hora_entrada = hora
                     registroAsistencia.foto = foto
+                    registroAsistencia.turno = "mañana"
                     registroAsistencia.usuario_id = usuario_id.id
 
                     await registroAsistencia.save()
@@ -102,6 +103,7 @@ export default class RegistroAsistenciasController {
                     registroAsistencia.fecha = fecha_formateada
                     registroAsistencia.hora_entrada = hora
                     registroAsistencia.foto = foto
+                    registroAsistencia.turno = "tarde"
                     registroAsistencia.usuario_id = usuario_id.id
 
                     await registroAsistencia.save()
