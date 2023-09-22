@@ -9,6 +9,7 @@ export default class extends BaseSchema {
       table.integer("usuario_id").unsigned().references("id").inTable("usuarios")
       table.date("fecha")
       table.string("turno")
+      table.string("minutos")
     
       table.timestamp('created_at', { useTz: true })
       table.timestamp('updated_at', { useTz: true })

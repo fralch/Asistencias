@@ -1,6 +1,7 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import RegistroAsistencia from 'App/Models/RegistroAsistencia'
 import Usuario from 'App/Models/Usuario'
+import Tardanza from 'App/Models/Tardanza'
 
 export default class RegistroAsistenciasController {
     public async getRegistroAsistencias({ }: HttpContextContract) {
@@ -81,6 +82,17 @@ export default class RegistroAsistenciasController {
                     registroAsistencia.usuario_id = usuario_id.id
 
                     await registroAsistencia.save()
+                    
+                    if (parseInt(minutos) > 0 && parseInt(minutos) < 15) {
+                        const tardanza = new Tardanza()
+                        tardanza.fecha = fecha_formateada + ' ' + hora
+                        tardanza.minutos =  minutos
+                        tardanza.usuario_id = usuario_id.id
+                        await tardanza.save()
+                    }
+
+
+
                     return response.status(200).send({ message: 'Asistencia registrada' })
                 }
             }
@@ -106,6 +118,13 @@ export default class RegistroAsistenciasController {
                     registroAsistencia.turno = "tarde"
                     registroAsistencia.usuario_id = usuario_id.id
 
+                    if (parseInt(minutos) > 0 && parseInt(minutos) < 15) {
+                        const tardanza = new Tardanza()
+                        tardanza.fecha = fecha_formateada + ' ' + hora
+                        tardanza.minutos =  minutos
+                        tardanza.usuario_id = usuario_id.id
+                        await tardanza.save()
+                    }
                     await registroAsistencia.save()
                     return response.status(200).send({ message: 'Asistencia registrada' })
                 }
