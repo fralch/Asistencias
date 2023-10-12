@@ -8,7 +8,9 @@ export default class RegistroAsistenciasController {
         return { hello: 'world' }
     }
     public async setRegistroAsistencias({ request, response }: HttpContextContract) {
-        const {  foto, dni } = request.all()
+        // const {  foto, dni } = request.all()
+        const {dni } = request.all()
+        const foto  = ""; 
 
         // obteniendo usuario de dni 
         const usuario_id = await Usuario.findBy('dni', dni)
