@@ -26,7 +26,7 @@ export default class RegistroAsistenciasController {
         const fecha = now.toLocaleString("es-PE", options).split(' ')[0]
         const fecha_formateada = fecha.split('/')[2] + '-' + fecha.split('/')[1] + '-' + fecha.split('/')[0]
         const hora = now.toLocaleString("es-PE", options).split(' ')[1]
-        const hora_entrada_m = "08:00"
+        const hora_entrada_m = "11:00"
         const hora_salida_m = "13:00"
         const hora_entrada_t = "14:00"
         const hora_salida_t = "18:00"
@@ -64,7 +64,7 @@ export default class RegistroAsistenciasController {
         }else if (turno === 'mañana') {
             // minutos de tolerancia 
             const minutos = hora.split(':')[1]
-            if (parseInt(minutos) > 15) {
+            if (parseInt(minutos) > 15 && parseInt(hora.split(':')[0]) > parseInt(hora_entrada_m.split(':')[0])) {
                 return response.status(400).send({ error: 'Fuera de hora' })
             }
 
@@ -102,7 +102,7 @@ export default class RegistroAsistenciasController {
         } else if (turno === 'tarde') {
             // minutos de tolerancia 
             const minutos = hora.split(':')[1]
-            if (parseInt(minutos) > 15) {
+            if (parseInt(minutos) > 15 && parseInt(hora.split(':')[0]) > parseInt(hora_entrada_m.split(':')[0])) {
                 return response.status(400).send({ error: 'Fuera de hora' })
             }
 
