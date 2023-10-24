@@ -26,7 +26,7 @@ export default class RegistroAsistenciasController {
         const fecha = now.toLocaleString("es-PE", options).split(' ')[0]
         const fecha_formateada = fecha.split('/')[2] + '-' + fecha.split('/')[1] + '-' + fecha.split('/')[0]
         const hora = now.toLocaleString("es-PE", options).split(' ')[1]
-        const hora_entrada_m = "11:00"
+        const hora_entrada_m = "09:00"
         const hora_salida_m = "13:00"
         const hora_entrada_t = "14:00"
         const hora_salida_t = "18:00"
@@ -48,9 +48,9 @@ export default class RegistroAsistenciasController {
             const [horaSalidaTurnoTarde] = hora_salida_t.split(':'); // Ejemplo: '18:00' -> horaSalidaTurno: '18', minutosSalida: '00'
 
             // trabajar aqui para saber en que turno esta 
-            if (horaActual >= horaEntradaTurnoMañana && horaActual <= horaSalidaTurnoMañana) {
+            if (parseInt(horaActual) >= (parseInt(horaEntradaTurnoMañana)-1) && parseInt(horaActual) <= parseInt(horaSalidaTurnoMañana)) {
                 return 'mañana';
-            }else if (horaActual >= horaEntradaTurnoTarde && horaActual <= horaSalidaTurnoTarde) {
+            }else if (parseInt(horaActual) >= (parseInt(horaEntradaTurnoTarde)-1) && parseInt(horaActual) <= parseInt(horaSalidaTurnoTarde)) {
                 return 'tarde'; 
             }else {
                 return 'desconocido';
@@ -102,7 +102,7 @@ export default class RegistroAsistenciasController {
         } else if (turno === 'tarde') {
             // minutos de tolerancia 
             const minutos = hora.split(':')[1]
-            if (parseInt(minutos) > 15 && parseInt(hora.split(':')[0]) > parseInt(hora_entrada_m.split(':')[0])) {
+            if (parseInt(minutos) > 15 && parseInt(hora.split(':')[0]) > parseInt(hora_entrada_t.split(':')[0])) {
                 return response.status(400).send({ error: 'Fuera de hora' })
             }
 
