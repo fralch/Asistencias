@@ -8,9 +8,26 @@ export default class RegistroAsistenciasController {
         return { hello: 'world' }
     }
     public async setRegistroAsistencias({ request, response }: HttpContextContract) {
+        const now = new Date()
+        const options = { timeZone: 'America/Lima' }
+        const fecha = now.toLocaleString("es-PE", options).split(' ')[0]
+        const fecha_formateada = fecha.split('/')[2] + '-' + fecha.split('/')[1] + '-' + fecha.split('/')[0]
+        const hora = now.toLocaleString("es-PE", options).split(' ')[1]
+        const hora_entrada_m = "11:00"
+        const hora_salida_m = "13:00"
+        const hora_entrada_t = "14:00"
+        const hora_salida_t = "18:00"
         // const {  foto, dni } = request.all()
         const {dni } = request.all()
         const foto  = ""; 
+        const file = request.file('foto') // 'file' es el nombre del campo del archivo en el formulario
+
+        await file?.move('./tmp', {
+            name: `${dni}${now.toISOString().replace(/[:.T-]/g, '') }.jpg`,
+            overwrite: true
+        
+        })
+
 
         // obteniendo usuario de dni 
         const usuario_id = await Usuario.findBy('dni', dni)
@@ -20,16 +37,6 @@ export default class RegistroAsistenciasController {
         }
 
 
-
-        const now = new Date()
-        const options = { timeZone: 'America/Lima' }
-        const fecha = now.toLocaleString("es-PE", options).split(' ')[0]
-        const fecha_formateada = fecha.split('/')[2] + '-' + fecha.split('/')[1] + '-' + fecha.split('/')[0]
-        const hora = now.toLocaleString("es-PE", options).split(' ')[1]
-        const hora_entrada_m = "09:00"
-        const hora_salida_m = "13:00"
-        const hora_entrada_t = "14:00"
-        const hora_salida_t = "18:00"
 
         function estaEnTurno(hora) {
             // Dividir la hora actual en hora y minutos
