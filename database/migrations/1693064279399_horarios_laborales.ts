@@ -9,7 +9,7 @@ export default class extends BaseSchema {
       table.time("hora_entrada")
       table.time("hora_salida")
       table.integer("usuario_id").unsigned().references("id").inTable("usuarios").onDelete("CASCADE")
-
+      table.string("turno", 1)
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
        */
