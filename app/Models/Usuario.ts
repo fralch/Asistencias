@@ -9,7 +9,7 @@ export default class Usuario extends BaseModel {
   public nombre: string
 
   @column()
-  public cargo: number
+  public cargo: string
 
   @column()
   public celular: number
