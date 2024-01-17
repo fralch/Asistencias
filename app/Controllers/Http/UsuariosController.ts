@@ -8,24 +8,24 @@ export default class UsuariosController {
   }
 
   public async setUsuarios({request, response}: HttpContextContract) {
-    const { dni, nombre, apellido, celular, cargo, area } = request.all()
+    const { nombre, cargo, celular, correo, direccion, dni} = request.all()
     const validar_usuario = await Usuario.findBy('dni', dni)
     if (validar_usuario) {
       return response.status(400).json({ message: 'Usuario ya existe' })
     }
-    Usuario.create({ dni, nombre, apellido, celular, cargo, area })
+    Usuario.create({ nombre, cargo, celular, correo, direccion, dni })
     return response.status(200).json({ message: 'Usuario creado' })
   }
 
   public async updateUsuarios({request, response}: HttpContextContract) {	
-    const { id, dni, nombre, apellido, celular, cargo, area } = request.all()
+    const { id, nombre, cargo, celular, correo, direccion, dni } = request.all()
     const usuario = await Usuario.findOrFail(id)
-    if (dni !== undefined) usuario.dni = dni;
     if (nombre !== undefined) usuario.nombre = nombre;
-    if (apellido !== undefined) usuario.apellido = apellido;
-    if (celular !== undefined) usuario.celular = celular;
     if (cargo !== undefined) usuario.cargo = cargo;
-    if (area !== undefined) usuario.area = area;
+    if (celular !== undefined) usuario.celular = celular;
+    if (correo !== undefined) usuario.correo = correo;
+    if (direccion !== undefined) usuario.direccion = direccion;
+    if (dni !== undefined) usuario.dni = dni;
     await usuario.save()
     return response.status(200).json({ message: 'Usuario actualizado' })
   }
