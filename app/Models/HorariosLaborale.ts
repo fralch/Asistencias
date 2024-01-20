@@ -6,16 +6,21 @@ export default class HorariosLaborale extends BaseModel {
   public id: number
 
   @column()
-  public hora_entrada : DateTime
+  public entrada_manana : DateTime
 
   @column()
-  public hora_salida : DateTime
+  public salida_manana : DateTime
+
+  @column()
+  public entrada_tarde : DateTime
+
+  @column()
+  public salida_tarde : DateTime
 
   @column()
   public usuario_id : number
   
-  @column()
-  public turno: string
+
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime

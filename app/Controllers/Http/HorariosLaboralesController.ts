@@ -8,21 +8,24 @@ export default class HorariosLaboralesController {
     }
 
     public async setHorariosLaborales({request, response}: HttpContextContract) {
-        const { id, hora_entrada, hora_salida, usuario_id, turno } = request.all()
+        const {id, entrada_manana, salida_manana, entrada_tarde, salida_tarde, usuario_id } = request.all()
 
         const horarioLaboral = await HorariosLaborale.findBy('usuario_id', usuario_id)
         if (horarioLaboral) return response.status(400).json({ message: 'Ya existe un horario laboral para este usuario' })
         
-        HorariosLaborale.create({ id, hora_entrada, hora_salida, usuario_id, turno })
+        HorariosLaborale.create({ id, entrada_manana, salida_manana, entrada_tarde, salida_tarde, usuario_id })
         return response.status(200).json({ message: 'Horario laboral creado' })
     }
 
     public async updateHorariosLaborales({request, response}: HttpContextContract) {
-        const { id, hora_entrada, hora_salida, usuario_id } = request.all()
+        const { id, entrada_manana, salida_manana, entrada_tarde, salida_tarde, usuario_id } = request.all()
         const horarioLaboral = await HorariosLaborale.findOrFail(id)
-        if (hora_entrada !== undefined) horarioLaboral.hora_entrada = hora_entrada;
-        if (hora_salida !== undefined) horarioLaboral.hora_salida = hora_salida;
+        if (entrada_manana !== undefined) horarioLaboral.entrada_manana = entrada_manana;
+        if (salida_manana !== undefined) horarioLaboral.salida_manana = salida_manana;
+        if (entrada_tarde !== undefined) horarioLaboral.entrada_tarde = entrada_tarde;
+        if (salida_tarde !== undefined) horarioLaboral.salida_tarde = salida_tarde;
         if (usuario_id !== undefined) horarioLaboral.usuario_id = usuario_id;
+        
         await horarioLaboral.save()
         return response.status(200).json({ message: 'Horario laboral actualizado' })
     }
