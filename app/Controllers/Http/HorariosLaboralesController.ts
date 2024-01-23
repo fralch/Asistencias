@@ -7,6 +7,12 @@ export default class HorariosLaboralesController {
         return response.status(200).json(horariosLaborales)       
     }
 
+    // horarios por id de usuario
+    public async getHorarioLaboral({params, response}: HttpContextContract) {
+        const horarioLaboral = await HorariosLaborale.findBy('usuario_id', params.id)
+        return response.status(200).json(horarioLaboral)
+    }
+
     public async setHorariosLaborales({request, response}: HttpContextContract) {
         const {id, entrada_manana, salida_manana, entrada_tarde, salida_tarde, usuario_id } = request.all()
 
