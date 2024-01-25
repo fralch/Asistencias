@@ -1,5 +1,6 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import RegistroAsistencia from 'App/Models/RegistroAsistencia'
+import HorariosLaborale from 'App/Models/HorariosLaborale'
 import Usuario from 'App/Models/Usuario'
 import Tardanza from 'App/Models/Tardanza'
 
@@ -8,17 +9,28 @@ export default class RegistroAsistenciasController {
         return { hello: 'world' }
     }
     public async setRegistroAsistencias({ request, response }: HttpContextContract) {
+        const {dni } = request.all()
+        // obteniendo usuario de dni 
+        const usuario_id = await Usuario.findBy('dni', dni)
+        if (!usuario_id) {
+            return response.status(400).send({ error: 'Usuario no encontrado' })
+        }
+        
         const now = new Date()
         const options = { timeZone: 'America/Lima' }
         const fecha = now.toLocaleString("es-PE", options).split(' ')[0]
         const fecha_formateada = fecha.split('/')[2] + '-' + fecha.split('/')[1] + '-' + fecha.split('/')[0]
         const hora = now.toLocaleString("es-PE", options).split(' ')[1]
-        const hora_entrada_m = "10:00"
-        const hora_salida_m = "13:00"
-        const hora_entrada_t = "14:00"
-        const hora_salida_t = "18:00"
+        // const hora_entrada_m = "10:00"
+        // const hora_salida_m = "13:00"
+        // const hora_entrada_t = "14:00"
+        // const hora_salida_t = "18:00"
+        const horarioLaboral = await HorariosLaborale.findBy('usuario_id', usuario_id.id)
+        const hora_entrada_m = (horarioLaboral?.entrada_manana)?.toString(); 
+        const hora_salida_m = (horarioLaboral?.salida_manana)?.toString();
+        const hora_entrada_t = (horarioLaboral?.entrada_tarde)?.toString();
+        const hora_salida_t = (horarioLaboral?.salida_tarde)?.toString();
         // const {  foto, dni } = request.all()
-        const {dni } = request.all()
         const name_foto  = `${dni}${now.toISOString().replace(/[:.T-]/g, '') }.jpg`; 
         const file = request.file('foto') // 'file' es el nombre del campo del archivo en el formulario
 
@@ -28,31 +40,15 @@ export default class RegistroAsistenciasController {
         
         })
 
-
-        // obteniendo usuario de dni 
-        const usuario_id = await Usuario.findBy('dni', dni)
-        
-        if (!usuario_id) {
-            return response.status(400).send({ error: 'Usuario no encontrado' })
-        }
-
-
-
         function estaEnTurno(hora) {
             // Dividir la hora actual en hora y minutos
             const [horaActual] = hora.split(':'); // Ejemplo: '09:30' -> horaActual: '09', minutosActual: '30'
 
             // Dividir la hora de entrada en hora y minutos
-            const [horaEntradaTurnoMañana] = hora_entrada_m.split(':'); // Ejemplo: '08:00' -> horaEntradaTurno: '08', minutosEntrada: '00'
-
-            // Dividir la hora de salida en hora y minutos
-            const [horaSalidaTurnoMañana] = hora_salida_m.split(':'); // Ejemplo: '13:00' -> horaSalidaTurno: '13', minutosSalida: '00'
-
-            // Dividir la hora de entrada en hora y minutos
-            const [horaEntradaTurnoTarde] = hora_entrada_t.split(':'); // Ejemplo: '14:00' -> horaEntradaTurno: '14', minutosEntrada: '00'
-
-            // Dividir la hora de salida en hora y minutos
-            const [horaSalidaTurnoTarde] = hora_salida_t.split(':'); // Ejemplo: '18:00' -> horaSalidaTurno: '18', minutosSalida: '00'
+            const [horaEntradaTurnoMañana] = hora_entrada_m ? hora_entrada_m.split(':') : ['', '']; // Ejemplo: '09:00' -> horaEntradaTurnoMañana: '09', minutosEntradaTurnoMañana: '00'
+            const [horaEntradaTurnoTarde] = hora_entrada_t ? hora_entrada_t.split(':') : ['', '']; // Ejemplo: '14:00' -> horaEntradaTurnoTarde: '14', minutosEntradaTurnoTarde: '00'
+            const [horaSalidaTurnoMañana] = hora_salida_m ? hora_salida_m.split(':') : ['', '']; // Ejemplo: '13:00' -> horaSalidaTurnoMañana: '13', minutosSalidaTurnoMañana: '00'
+            const [horaSalidaTurnoTarde] = hora_salida_t ? hora_salida_t.split(':') : ['', '']; // Ejemplo: '18:00' -> horaSalidaTurnoTarde: '18', minutosSalidaTurnoTarde: '00'
 
             // trabajar aqui para saber en que turno esta 
             if (parseInt(horaActual) >= (parseInt(horaEntradaTurnoMañana)-1) && parseInt(horaActual) <= parseInt(horaSalidaTurnoMañana)) {
@@ -63,7 +59,6 @@ export default class RegistroAsistenciasController {
                 return 'desconocido';
             }            
         }
-
         let turno = estaEnTurno(hora)
 
         if (turno === 'desconocido') {
@@ -71,8 +66,7 @@ export default class RegistroAsistenciasController {
         }else if (turno === 'mañana') {
             // minutos de tolerancia 
             const minutos = hora.split(':')[1]
-            console.log(`minutos: ${ parseInt(hora_entrada_m.split(':')[0])}`); 
-            if (parseInt(minutos) > 15 && (parseInt(hora.split(':')[0])) >= (parseInt(hora_entrada_m.split(':')[0]))) {
+            if (hora_entrada_m && parseInt(minutos) > 15 && parseInt(hora.split(':')[0]) >= parseInt(hora_entrada_m.split(':')[0])) {
                 return response.status(400).send({ error: 'Fuera de hora' })
             }
 
@@ -109,9 +103,9 @@ export default class RegistroAsistenciasController {
             
         } else if (turno === 'tarde') {
             // minutos de tolerancia 
-            const minutos = hora.split(':')[1]
-            if (parseInt(minutos) > 15 && parseInt(hora.split(':')[0]) >= parseInt(hora_entrada_t.split(':')[0])) {
-                return response.status(400).send({ error: 'Fuera de hora' })
+            const minutos = hora.split(':')[1];
+            if (hora_entrada_t && parseInt(minutos) > 15 && parseInt(hora.split(':')[0]) >= parseInt(hora_entrada_t.split(':')[0])) {
+                return response.status(400).send({ error: 'Fuera de hora' });
             }
 
             const usuario = await Usuario.findBy('dni', dni);
