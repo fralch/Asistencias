@@ -9,7 +9,7 @@ export default class RegistroAsistencia extends BaseModel {
   public fecha : string
 
   @column()
-  public hora_entrada : string
+  public hora_entrada : string 
 
   @column()
   public hora_salida : string

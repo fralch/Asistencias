@@ -67,7 +67,8 @@ export default class RegistroAsistenciasController {
             console.log('turno mañana')
             // minutos de tolerancia 
             const minutos = hora.split(':')[1]
-            if (hora_entrada_m && parseInt(minutos) > 15 && parseInt(hora.split(':')[0]) >= parseInt(hora_entrada_m.split(':')[0])) {
+            const diferencia_Min = parseInt(minutos) - parseInt(hora_entrada_m?.split(':')[1] ?? '');
+            if (hora_entrada_m && diferencia_Min >= 15 && parseInt(hora.split(':')[0]) >= parseInt(hora_entrada_m.split(':')[0])) {
                 return response.status(400).send({ error: 'Fuera de hora' })
             }
 
@@ -88,10 +89,10 @@ export default class RegistroAsistenciasController {
 
                     await registroAsistencia.save()
                     
-                    if (parseInt(minutos) > 0 && parseInt(minutos) < 15) {
+                    if  (diferencia_Min > 0 && diferencia_Min < 15) {
                         const tardanza = new Tardanza()
                         tardanza.fecha = fecha_formateada + ' ' + hora
-                        tardanza.minutos =  minutos
+                        tardanza.minutos =  diferencia_Min.toString()
                         tardanza.usuario_id = usuario_id.id
                         await tardanza.save()
                     }
@@ -106,7 +107,9 @@ export default class RegistroAsistenciasController {
             console.log('turno tarde')
             // minutos de tolerancia 
             const minutos = hora.split(':')[1];
-            if (hora_entrada_t && parseInt(minutos) > 15 && parseInt(hora.split(':')[0]) >= parseInt(hora_entrada_t.split(':')[0])) {
+
+           const diferencia_Min = parseInt(minutos) - parseInt(hora_entrada_m?.split(':')[1] ?? '');
+            if (hora_entrada_m && diferencia_Min >= 15 && parseInt(hora.split(':')[0]) >= parseInt(hora_entrada_m.split(':')[0])) {
                 return response.status(400).send({ error: 'Fuera de hora' });
             }
 
@@ -124,10 +127,10 @@ export default class RegistroAsistenciasController {
                     registroAsistencia.turno = "tarde"
                     registroAsistencia.usuario_id = usuario_id.id
 
-                    if (parseInt(minutos) > 0 && parseInt(minutos) < 15) {
+                    if (diferencia_Min > 0 && diferencia_Min < 15) {
                         const tardanza = new Tardanza()
                         tardanza.fecha = fecha_formateada + ' ' + hora
-                        tardanza.minutos =  minutos
+                        tardanza.minutos =  diferencia_Min.toString()
                         tardanza.usuario_id = usuario_id.id
                         await tardanza.save()
                     }
