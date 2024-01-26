@@ -15,7 +15,7 @@ export default class Tardanza extends BaseModel {
   public turno: string
 
   @column()
-  public minutos: string
+  public minutos: number
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime

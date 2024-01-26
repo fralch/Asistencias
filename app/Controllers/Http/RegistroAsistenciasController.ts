@@ -92,7 +92,7 @@ export default class RegistroAsistenciasController {
                     if  (diferencia_Min > 0 && diferencia_Min < 15) {
                         const tardanza = new Tardanza()
                         tardanza.fecha = fecha_formateada + ' ' + hora
-                        tardanza.minutos =  diferencia_Min.toString()
+                        tardanza.minutos =  diferencia_Min
                         tardanza.usuario_id = usuario_id.id
                         await tardanza.save()
                     }
@@ -130,7 +130,7 @@ export default class RegistroAsistenciasController {
                     if (diferencia_Min > 0 && diferencia_Min < 15) {
                         const tardanza = new Tardanza()
                         tardanza.fecha = fecha_formateada + ' ' + hora
-                        tardanza.minutos =  diferencia_Min.toString()
+                        tardanza.minutos =  diferencia_Min
                         tardanza.usuario_id = usuario_id.id
                         await tardanza.save()
                     }
