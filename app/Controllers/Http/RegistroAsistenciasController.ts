@@ -64,6 +64,7 @@ export default class RegistroAsistenciasController {
         if (turno === 'desconocido') {
             return response.status(400).send({ error: 'Fuera de turno' })
         }else if (turno === 'mañana') {
+            console.log('turno mañana')
             // minutos de tolerancia 
             const minutos = hora.split(':')[1]
             if (hora_entrada_m && parseInt(minutos) > 15 && parseInt(hora.split(':')[0]) >= parseInt(hora_entrada_m.split(':')[0])) {
@@ -102,6 +103,7 @@ export default class RegistroAsistenciasController {
             }
             
         } else if (turno === 'tarde') {
+            console.log('turno tarde')
             // minutos de tolerancia 
             const minutos = hora.split(':')[1];
             if (hora_entrada_t && parseInt(minutos) > 15 && parseInt(hora.split(':')[0]) >= parseInt(hora_entrada_t.split(':')[0])) {
