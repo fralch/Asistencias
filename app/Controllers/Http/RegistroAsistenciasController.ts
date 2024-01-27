@@ -159,7 +159,7 @@ export default class RegistroAsistenciasController {
         const registroAsistencia =  await db.query()
                                 .from('registro_asistencias')
                                 .leftJoin('usuarios', 'registro_asistencias.usuario_id', 'usuarios.id')
-                                .select('registro_asistencias.usuario_id', 'usuarios.nombre', 'registro_asistencias.fecha', 'registro_asistencias.hora_entrada')
+                                .select('registro_asistencias.usuario_id', 'usuarios.nombre', 'registro_asistencias.fecha', 'registro_asistencias.hora_entrada', 'registro_asistencias.turno')
                                 .whereBetween('fecha', [fechaInicio, fechaFin])
         return response.status(200).json(registroAsistencia)
 
@@ -172,7 +172,7 @@ export default class RegistroAsistenciasController {
             const registroAsistencia =  await db.query()
                                     .from('registro_asistencias')
                                     .leftJoin('usuarios', 'registro_asistencias.usuario_id', 'usuarios.id')
-                                    .select('registro_asistencias.usuario_id', 'usuarios.nombre', 'registro_asistencias.fecha', 'registro_asistencias.hora_entrada')
+                                    .select('registro_asistencias.usuario_id', 'usuarios.nombre', 'registro_asistencias.fecha', 'registro_asistencias.hora_entrada', 'registro_asistencias.turno')
                                     .whereBetween('fecha', [fechaInicio, fechaFin])
                                     .where('usuario_id', usuario_id.id)
             return response.status(200).json(registroAsistencia)
