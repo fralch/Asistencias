@@ -49,9 +49,13 @@ Route.delete('/feriados_domingos', 'FeriadosDomingosController.deleteFeriadosDom
 
 
 Route.post('/registro_asistencias', 'RegistroAsistenciasController.setRegistroAsistencias'); 
+Route.post('/registro_asistencias_all', 'RegistroAsistenciasController.getRegistroAsistencia');
+Route.post('/registro_asistencias_date', 'RegistroAsistenciasController.postRegistroAsistenciaByDateRange');
+Route.post('/registro_asistencias_user', 'RegistroAsistenciasController.postRegistroAsistenciaByDateRangeAndDni');
 Route.post('/registrar_tardanzas_faltas', 'RegistarTardanzasFaltasController.registrarFalta')
 
 Route.get('/tardanzas', 'TardanzasController.getTardanzas')
 Route.get('/tardanzas/:dni', 'TardanzasController.getTardanza')
 Route.post('/tardanzas', 'TardanzasController.postTardanzasByDateRange')
+Route.post('/tardanzas_user', 'TardanzasController.postTardanzasByDateRangeAndDni')
 

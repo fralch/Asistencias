@@ -1,4 +1,6 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import db from '@ioc:Adonis/Lucid/Database' 
+
 import RegistroAsistencia from 'App/Models/RegistroAsistencia'
 import HorariosLaborale from 'App/Models/HorariosLaborale'
 import Usuario from 'App/Models/Usuario'
@@ -143,4 +145,39 @@ export default class RegistroAsistenciasController {
 
     
 
+    public async getRegistroAsistencia({ response }: HttpContextContract) {
+        const registroAsistencia = await db.query()
+        .from('registro_asistencias')
+        .leftJoin('usuarios', 'registro_asistencias.usuario_id', 'usuarios.id')
+        .select('registro_asistencias.usuario_id', 'usuarios.nombre', 'registro_asistencias.fecha', 'registro_asistencias.hora_entrada', 'registro_asistencias.turno')
+        .orderBy('registro_asistencias.fecha', 'desc')
+        return response.status(200).json(registroAsistencia)
+    }
+
+    public async postRegistroAsistenciaByDateRange({ request, response }: HttpContextContract) {
+        const { fechaInicio, fechaFin } = request.all()
+        const registroAsistencia =  await db.query()
+                                .from('registro_asistencias')
+                                .leftJoin('usuarios', 'registro_asistencias.usuario_id', 'usuarios.id')
+                                .select('registro_asistencias.usuario_id', 'usuarios.nombre', 'registro_asistencias.fecha', 'registro_asistencias.hora_entrada')
+                                .whereBetween('fecha', [fechaInicio, fechaFin])
+        return response.status(200).json(registroAsistencia)
+
+    }
+
+    public async postRegistroAsistenciaByDateRangeAndDni({ request, response }: HttpContextContract) {
+        const { fechaInicio, fechaFin, dni } = request.all()
+        const usuario_id = await Usuario.findBy('dni', dni)
+        if (usuario_id?.id) {
+            const registroAsistencia =  await db.query()
+                                    .from('registro_asistencias')
+                                    .leftJoin('usuarios', 'registro_asistencias.usuario_id', 'usuarios.id')
+                                    .select('registro_asistencias.usuario_id', 'usuarios.nombre', 'registro_asistencias.fecha', 'registro_asistencias.hora_entrada')
+                                    .whereBetween('fecha', [fechaInicio, fechaFin])
+                                    .where('usuario_id', usuario_id.id)
+            return response.status(200).json(registroAsistencia)
+        } else {
+            return response.status(404).json({ message: 'Usuario no encontrado' })
+        }
+    }
 }

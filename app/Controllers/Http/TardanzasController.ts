@@ -34,10 +34,28 @@ export default class TardanzasController {
     const { fechaInicio, fechaFin } = request.all()
     const tardanzas = await db.query()
                       .from('tardanzas')
-                      .select('usuario_id', 'fecha', 'minutos', 'created_at')
+                      .leftJoin('usuarios', 'tardanzas.usuario_id', 'usuarios.id')
+                      .select('tardanzas.usuario_id', 'usuarios.nombre', 'tardanzas.fecha', 'tardanzas.minutos', 'tardanzas.created_at')
                       .whereBetween('fecha', [fechaInicio, fechaFin])
                       .orderBy('created_at', 'desc')
     return response.status(200).json(tardanzas)
+  }
+
+  public async postTardanzasByDateRangeAndDni({ request, response }: HttpContextContract) {
+    const { fechaInicio, fechaFin, dni } = request.all()
+    const usuario_id = await Usuario.findBy('dni', dni)
+    if (usuario_id?.id) {
+      const tardanzas = await db.query()
+                        .from('tardanzas')
+                        .leftJoin('usuarios', 'tardanzas.usuario_id', 'usuarios.id')
+                        .select('tardanzas.usuario_id', 'usuarios.nombre', 'tardanzas.fecha', 'tardanzas.minutos', 'tardanzas.created_at')
+                        .whereBetween('fecha', [fechaInicio, fechaFin])
+                        .where('usuario_id', usuario_id.id)
+                        .orderBy('created_at', 'desc')
+      return response.status(200).json(tardanzas)
+    } else {
+      return response.status(404).json({ message: 'Usuario no encontrado' })
+    }
   }
   
 }
