@@ -53,4 +53,5 @@ Route.post('/registrar_tardanzas_faltas', 'RegistarTardanzasFaltasController.reg
 
 Route.get('/tardanzas', 'TardanzasController.getTardanzas')
 Route.get('/tardanzas/:dni', 'TardanzasController.getTardanza')
+Route.post('/tardanzas', 'TardanzasController.postTardanzasByDateRange')
 
